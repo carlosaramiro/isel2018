@@ -17,7 +17,13 @@ portTickType start_timeout;
 
 int done0=0;
 int done15=0;
-
+int f1 (fsm_t *this);
+int f2 (fsm_t *this);
+int timeout (fsm_t *this);
+void activa (fsm_t *this);
+void pulsado (fsm_t *this);
+void timeEND (fsm_t *this);
+void desactivar (fsm_t *this);
 
 uint32 user_rf_cal_sector_set(void)
 {
@@ -60,29 +66,6 @@ enum fsm_state {
  ENCENDIDO2,
  ENCENDIDO3,
 };
-
-static fsm_trans_t alarma[] = {
-  { APAGADO_0, f1, APAGADO_1, pulsado },
-  { APAGADO_1, f1, APAGADO_2, pulsado},
-  { APAGADO_2, f1, APAGADO_3, pulsado},
-  { APAGADO_3, timeout, ENCENDIDO_0, time_END },
-
-  { APAGADO_1, timeout, APAGADO_0, time_END},
-  { APAGADO_2, timeout, APAGADO_0, time_END},
-  { APAGADO_3, f1, APAGADO_0, pulsado },
-
-  { ENCENDIDO_0, f2, ENCENDIDO_0, activa},
-
-  { ENCENDIDO_0, f1, ENCENDIDO_1, pulsado},
-  { ENCENDIDO_1, f1, ENCENDIDO_2, pulsado },
-  { ENCENDIDO_2, f1, ENCENDIDO_3, pulsado},
-  { ENCENDIDO_3, timeout, APAGADO_0, desactivar},
-
-  { ENCENDIDO_1, timeout, ENCENDIDO_0, timeEND },
-  { ENCENDIDO_2, timeout, ENCENDIDO_0, timeEND},
-  { ENCENDIDO_3, f1, ENCENDIDO_0, pulsado},
-  {-1, NULL, -1, NULL },
- };
 
 int f1 (fsm_t *this){
   return (done0);
@@ -137,6 +120,30 @@ void isr_gpio(void* arg) {
 
 void task_alarma(void* ignore)
 {
+
+static fsm_trans_t alarma[] = {
+  { APAGADO_0, f1, APAGADO_1, pulsado },
+  { APAGADO_1, f1, APAGADO_2, pulsado},
+  { APAGADO_2, f1, APAGADO_3, pulsado},
+  { APAGADO_3, timeout, ENCENDIDO_0, time_END },
+
+  { APAGADO_1, timeout, APAGADO_0, time_END},
+  { APAGADO_2, timeout, APAGADO_0, time_END},
+  { APAGADO_3, f1, APAGADO_0, pulsado },
+
+  { ENCENDIDO_0, f2, ENCENDIDO_0, activa},
+
+  { ENCENDIDO_0, f1, ENCENDIDO_1, pulsado},
+  { ENCENDIDO_1, f1, ENCENDIDO_2, pulsado },
+  { ENCENDIDO_2, f1, ENCENDIDO_3, pulsado},
+  { ENCENDIDO_3, timeout, APAGADO_0, desactivar},
+
+  { ENCENDIDO_1, timeout, ENCENDIDO_0, timeEND },
+  { ENCENDIDO_2, timeout, ENCENDIDO_0, timeEND},
+  { ENCENDIDO_3, f1, ENCENDIDO_0, pulsado},
+  {-1, NULL, -1, NULL },
+ };	
+	
   ETS_GPIO_INTR_ENABLE();
   PIN_FUNC_SELECT(GPIO_PIN_REG_15, FUNC_GPIO15);
   gpio_intr_handler_register((void*)isr_gpio, NULL);
