@@ -12,8 +12,12 @@ _xt_isr_mask(1 << ETS_GPIO_INUM)
 
 int done0 = 0;
 int done1 = 0;
-
-
+int f1 (fsm_t *this);
+int f2 (fsm_t *this) ;
+void activa(fsm_t *this);
+void encender (fsm_t *this);
+void apagar (fsm_t *this);
+	
 uint32 user_rf_cal_sector_set(void)
 {
     flash_size_map size_map = system_get_flash_size_map();
@@ -50,12 +54,7 @@ enum fsm_state {
  ENABLE,
 };
 
-static fsm_trans_t alarma[] = {
- {DISABLE, f1, ENABLE, encender},
- {ENABLE, f1, DISABLE, apagar},
- {ENABLE, f2, ENABLE, activa},
- {-1, NULL, -1, NULL },
-};
+
 
 int f1 (fsm_t *this){
   return (done0);
@@ -100,6 +99,14 @@ void isr_gpio(void* arg) {
 
 void task_alarma(void* ignore)
 {
+	
+ static fsm_trans_t alarma[] = {
+ {DISABLE, f1, ENABLE, encender},
+ {ENABLE, f1, DISABLE, apagar},
+ {ENABLE, f2, ENABLE, activa},
+ {-1, NULL, -1, NULL },
+};
+	
   ETS_GPIO_INTR_ENABLE();
   PIN_FUNC_SELECT(GPIO_PIN_REG_15, FUNC_GPIO15);
   gpio_intr_handler_register((void*)isr_gpio, NULL);
