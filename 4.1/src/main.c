@@ -12,9 +12,9 @@ _xt_isr_mask(1 << ETS_GPIO_INUM)
 
 int done0 = 0;
 int done1 = 0;
-
-
-
+int f_or (fsm_t *this)
+void encender(fsm_t *this)
+void apagar(fsm_t *this)
 
 /******************************************************************************
  * FunctionName : user_rf_cal_sector_set
@@ -64,11 +64,7 @@ enum fsm_state {
  LED_OFF,
 };
 
-static fsm_trans_t lamp[] = {
- {LED_ON, f_or, LED_OFF, apagar},
- {LED_OFF, f_or, LED_ON, encender},
- {-1, NULL, -1, NULL },
-};
+
 
 int f_or (fsm_t *this){
   return (done0 || done1);
@@ -84,6 +80,12 @@ void apagar(fsm_t *this){
 
 void task_lamp(void* ignore)
 {
+    static fsm_trans_t lamp[] = {
+ {LED_ON, f_or, LED_OFF, apagar},
+ {LED_OFF, f_or, LED_ON, encender},
+ {-1, NULL, -1, NULL },
+};
+      
   ETS_GPIO_INTR_ENABLE();
   PIN_FUNC_SELECT(GPIO_PIN_REG_15, FUNC_GPIO15);
   gpio_intr_handler_register((void*)isr_gpio, NULL);
