@@ -12,9 +12,9 @@ _xt_isr_mask(1 << ETS_GPIO_INUM)
 
 int done0 = 0;
 int done1 = 0;
-int f_or (fsm_t *this)
-void encender(fsm_t *this)
-void apagar(fsm_t *this)
+int f_or (fsm_t *this);
+void encender(fsm_t *this);
+void apagar(fsm_t *this);
 
 /******************************************************************************
  * FunctionName : user_rf_cal_sector_set
