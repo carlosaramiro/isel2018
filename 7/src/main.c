@@ -16,7 +16,7 @@ _xt_isr_mask(1 << ETS_GPIO_INUM)
 portTickType start_timeout;
 
 int done0=0;
-int done15=0;
+int done1=0;
 int f1 (fsm_t *this);
 int f2 (fsm_t *this);
 int timeout (fsm_t *this);
@@ -122,25 +122,25 @@ void task_alarma(void* ignore)
 {
 
 static fsm_trans_t alarma[] = {
-  { APAGADO_0, f1, APAGADO_1, pulsado },
-  { APAGADO_1, f1, APAGADO_2, pulsado},
-  { APAGADO_2, f1, APAGADO_3, pulsado},
-  { APAGADO_3, timeout, ENCENDIDO_0, time_END },
+  { APAGADO0, f1, APAGADO1, pulsado },
+  { APAGADO1, f1, APAGADO2, pulsado},
+  { APAGADO2, f1, APAGADO3, pulsado},
+  { APAGADO3, timeout, ENCENDIDO0, timeEND },
 
-  { APAGADO_1, timeout, APAGADO_0, time_END},
-  { APAGADO_2, timeout, APAGADO_0, time_END},
-  { APAGADO_3, f1, APAGADO_0, pulsado },
+  { APAGADO1, timeout, APAGADO_0, timeEND},
+  { APAGADO2, timeout, APAGADO_0, timeEND},
+  { APAGADO3, f1, APAGADO_0, pulsado },
 
-  { ENCENDIDO_0, f2, ENCENDIDO_0, activa},
+  { ENCENDIDO0, f2, ENCENDIDO0, activa},
 
-  { ENCENDIDO_0, f1, ENCENDIDO_1, pulsado},
-  { ENCENDIDO_1, f1, ENCENDIDO_2, pulsado },
-  { ENCENDIDO_2, f1, ENCENDIDO_3, pulsado},
-  { ENCENDIDO_3, timeout, APAGADO_0, desactivar},
+  { ENCENDIDO0, f1, ENCENDIDO1, pulsado},
+  { ENCENDIDO1, f1, ENCENDIDO2, pulsado },
+  { ENCENDIDO2, f1, ENCENDIDO3, pulsado},
+  { ENCENDIDO3, timeout, APAGADO0, desactivar},
 
-  { ENCENDIDO_1, timeout, ENCENDIDO_0, timeEND },
-  { ENCENDIDO_2, timeout, ENCENDIDO_0, timeEND},
-  { ENCENDIDO_3, f1, ENCENDIDO_0, pulsado},
+  { ENCENDIDO1, timeout, ENCENDIDO0, timeEND },
+  { ENCENDIDO2, timeout, ENCENDIDO0, timeEND},
+  { ENCENDIDO3, f1, ENCENDIDO0, pulsado},
   {-1, NULL, -1, NULL },
  };	
 	
