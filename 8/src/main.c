@@ -31,7 +31,6 @@ volatile int done0=0;
 volatile int done15=0;
 int code_index;
 int code_inserted[3];
-int valido;
 
 uint32 user_rf_cal_sector_set(void)
 {
@@ -95,15 +94,12 @@ return 0;
 void next_index (fsm_t *this) {
   code_index++;
   nexttimeout= 0xFFFFFFFF;
-  if (code_index>2){
-    if (code_inserted[0]==0 && code_inserted[1] == 0 && code_inserted[2]==0)
-      valido=1;
-      valido=0;
-}
 }
 
 int codigo_incorrecto (fsm_t *this) {
-return (valido);
+if (code_inserted[0]==0 && code_inserted[1] == 0 && code_inserted[2] == 0)
+    return 0;
+return 1;
 }
 
 void limpiar_flag (fsm_t *this) {
@@ -118,7 +114,9 @@ done15=0;
 }
 
 int codigo_correcto (fsm_t *this){
-  return (valido);
+  if (code_inserted[0]==0 && code_inserted[1] == 0 && code_inserted[2] == 0)
+    return 1;
+return 0;
 }
 
 void apagar (fsm_t *this) {
